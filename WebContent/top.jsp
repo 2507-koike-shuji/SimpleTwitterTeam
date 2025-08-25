@@ -49,6 +49,18 @@
 			<input type="date" id="end" name="end" value="${end}">
 			<input type="submit" value="絞り込み">
 		</form>
+
+		<!-- 文字で絞込(検索)機能を追加 -->
+		<div class = "search">
+			<form action = "./" action = "get">
+				つぶやき：
+				<input type = "text" name ="word" value = "${searchWord}"/>
+				<input type="radio" name="radiobutton" value="startFrom" checked="checked">
+				から始まる
+				<input type= "submit" value = "検索">
+			</form>
+		</div>
+
 		<br />
 		<div class="form-area">
 		    <c:if test="${ isShowMessageForm }">
