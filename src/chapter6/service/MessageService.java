@@ -36,6 +36,7 @@ public class MessageService {
     }
 
     public List<UserMessage> select(String userId, String start, String end, String searchWord, String likeSearch) {
+
     	final int LIMIT_NUM = 1000;
     	Connection connection = null;
     	try {
