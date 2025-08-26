@@ -55,10 +55,17 @@
 			<form action = "./" action = "get">
 				つぶやき：
 				<input type = "text" name ="word" value = "${searchWord}"/>
-				<input type="radio" name="radiobutton" value="startFrom" checked="checked">
+
+				<!-- 「～から始まる文字検索BOX」に値が入っていれば「始まるのラジオボタン」にチェックが入る -->
+				<input type="radio" name="radiobutton" value="startFrom" <c:if test= "${startFrom}">
+				checked="checked"</c:if>>
 				から始まる
-				<input type="radio" name="radiobutton" value="contain" checked="checked">
+
+				<!-- ～から始まる文字検索BOXに値が入っていなければ「含むのラジオボタン」にチェックが入る -->
+				<input type="radio" name="radiobutton" value="contain" <c:if test = "${!startFrom}">
+				checked="checked" </c:if>>
 				を含む
+
 				<input type= "submit" value = "検索">
 			</form>
 		</div>

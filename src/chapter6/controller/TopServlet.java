@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 import chapter6.beans.User;
 import chapter6.beans.UserComment;
 import chapter6.beans.UserMessage;
@@ -29,14 +31,20 @@ public class TopServlet extends HttpServlet {
             isShowMessageForm = true;
         }
 
-        //検索文字と文字列の初期値を受取る
-
         String searchWord = request.getParameter("word");
         String radiobutton = request.getParameter("radiobutton");
 		String userId = request.getParameter("user_id");
+		//???
+		request.setAttribute("startFrom", true);
 		String start = request.getParameter("start");
         String end = request.getParameter("end");
         List<UserMessage> messages = new MessageService().select(userId, start, end, searchWord, radiobutton);
+
+        //ラジオボタンにチェックが入っているかつ「～を含むラジオボタン」にチェックがあるなら
+        //staertFrom(=～から始まるラジオボタン)にfalseが入る
+        if(!StringUtils.isBlank(radiobutton) && radiobutton.equals("contain")) {
+        	request.setAttribute("startFrom", false);
+        }
 
         //返信コメントを表示する
         List<UserComment> comments = new CommentService().select();
@@ -47,7 +55,6 @@ public class TopServlet extends HttpServlet {
         request.setAttribute("searchWord", request.getParameter("word"));
         request.setAttribute("messages", messages);
         request.setAttribute("comments", comments);
-        request.setAttribute("searchWord", request.getParameter("word"));
         request.setAttribute("isShowMessageForm", isShowMessageForm);
         request.getRequestDispatcher("/top.jsp").forward(request, response);
     }

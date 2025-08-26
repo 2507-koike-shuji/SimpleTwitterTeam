@@ -36,7 +36,7 @@ public class UserMessageDao {
             if(userId != null) {
             	sql.append("AND user_id = ? ");
             }
-            //何かしらの検索文字が渡されたらSQL文追加(初期値を渡してるから絶対追加される？)
+            //何かしらの検索文字が渡されたらSQL文追加
 			if (!StringUtils.isBlank(searchWord)) {
 				sql.append(" AND messages.text like ? ");
 			}
@@ -45,17 +45,33 @@ public class UserMessageDao {
 			ps = connection.prepareStatement(sql.toString());
 			ps.setString(1, start);
 			ps.setString(2, end);
-            //アカウント名のリンクが踏まれたかの有無でバインド番号分岐
 
+            //アカウント名のリンクが踏まれた場合
 			if (userId != null) {
 				ps.setInt(3, userId);
 
+				//何かしらの検索文字が渡されていて
 				if (!StringUtils.isBlank(searchWord)) {
-					ps.setString(4, "%" + searchWord + "%");
+					//「～から始まるラジオボタン」にチェックが入っているなら
+					if (likeSearch.equals("startFrom")) {
+						ps.setString(4, searchWord + "%");
+					//「～を含むラジオボタン」にチェックが入っているなら
+					} else {
+						ps.setString(4, "%" + searchWord + "%");
+					}
 				}
+
+			//アカウント名のリンクが踏まれなかった場合
 			} else {
+				//何かしらの検索文字が渡されていて
 				if (!StringUtils.isBlank(searchWord)) {
-					ps.setString(3, "%" + searchWord + "%");
+					//「～から始まるラジオボタン」にチェックが入っているなら
+					if (likeSearch.equals("startFrom")) {
+						ps.setString(3, searchWord + "%");
+					//「～を含むラジオボタン」にチェックが入っているなら
+					} else {
+						ps.setString(3, "%" + searchWord + "%");
+					}
 				}
 			}
 			ResultSet rs = ps.executeQuery();
